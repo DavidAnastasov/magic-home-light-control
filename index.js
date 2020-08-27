@@ -1,5 +1,6 @@
 const { Extension, INPUT_METHOD, PLATFORMS } = require("deckboard-kit");
 const LightController = require("./lib/LightController");
+const { Control } = require("magic-home");
 
 class PowerControlExtension extends Extension {
   constructor() {
@@ -10,6 +11,16 @@ class PowerControlExtension extends Extension {
       ref: "device",
       type: INPUT_METHOD.INPUT_TEXT,
     };
+
+    const patterns = Control.patternNames.map((pattern) => ({
+      label: pattern,
+      value: pattern,
+    }));
+
+    const speeds = [...Array(101).keys()].map((number) => ({
+      label: number,
+      value: number,
+    }));
 
     this.name = "Magic home light control";
     this.platforms = [PLATFORMS.WINDOWS, PLATFORMS.MAC];
@@ -55,6 +66,24 @@ class PowerControlExtension extends Extension {
           device,
         ],
       },
+      {
+        label: "Set pattern",
+        value: "set-pattern",
+        icon: "chess-board",
+        input: [
+          {
+            label: "Pattern",
+            ref: "pattern",
+            type: INPUT_METHOD.INPUT_SELECT,
+            items: patterns,
+          },
+          {
+            label: "Speed",
+            ref: "speed",
+            type: INPUT_METHOD.INPUT_SELECT,
+            items: speeds,
+          },
+          device,
         ],
       },
     ];
@@ -79,6 +108,10 @@ class PowerControlExtension extends Extension {
       }
       case "color-control": {
         LightController.setColor(device, color);
+        break;
+      }
+      case "set-pattern": {
+        LightController.setPattern(device, pattern, speed);
         break;
       }
       default:
