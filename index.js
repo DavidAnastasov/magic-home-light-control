@@ -120,4 +120,8 @@ class PowerControlExtension extends Extension {
   }
 }
 
+process.on("uncaughtException", (err) => {
+  console.log("Caught exception: " + err);
+});
+
 module.exports = new PowerControlExtension();
