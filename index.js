@@ -1,16 +1,22 @@
 const { Extension, INPUT_METHOD, PLATFORMS } = require("deckboard-kit");
-const lightController = require("./lib/lightController");
+const LightController = require("./lib/LightController");
 
 class PowerControlExtension extends Extension {
   constructor() {
     super();
 
+    const device = {
+      label: "Device IP Address",
+      ref: "device",
+      type: INPUT_METHOD.INPUT_TEXT,
+    };
+
     this.name = "Magic home light control";
     this.platforms = [PLATFORMS.WINDOWS, PLATFORMS.MAC];
     this.inputs = [
       {
-        label: "Light control",
-        value: "light-control",
+        label: "Power control",
+        value: "power-control",
         icon: "power-off",
         color: "#34495e",
         input: [
@@ -33,32 +39,47 @@ class PowerControlExtension extends Extension {
               },
             ],
           },
+          device,
+        ],
+      },
+      {
+        label: "Color control",
+        value: "color-control",
+        icon: "lightbulb",
+        input: [
           {
-            label: "Device IP Address",
-            ref: "device",
+            label: "Color",
+            ref: "color",
             type: INPUT_METHOD.INPUT_TEXT,
           },
+          device,
+        ],
+      },
         ],
       },
     ];
   }
 
-  execute(action, { powerAction, device }) {
+  execute(action, { powerAction, device, color, pattern, speed }) {
     switch (action) {
-      case "light-control": {
+      case "power-control": {
         switch (powerAction) {
           case "turn-on":
-            lightController.setTurnedOn(device, true);
+            LightController.setTurnedOn(device, true);
             break;
           case "turn-off":
-            lightController.setTurnedOn(device, false);
+            LightController.setTurnedOn(device, false);
             break;
           case "toggle":
-            lightController.toggle(device);
+            LightController.toggle(device);
             break;
           default:
             break;
         }
+      }
+      case "color-control": {
+        LightController.setColor(device, color);
+        break;
       }
       default:
         break;
