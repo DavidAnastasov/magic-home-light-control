@@ -6,7 +6,8 @@
   "private": false,
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "build": "deckboard-kit --build"
   },
   "dependencies": {
     "deckboard-kit": "^0.1.3",
