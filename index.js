@@ -1,5 +1,5 @@
 const { Extension, INPUT_METHOD, PLATFORMS } = require("deckboard-kit");
-const lights = require("./lib/lightControl");
+const lightController = require("./lib/lightController");
 
 class PowerControlExtension extends Extension {
   constructor() {
@@ -33,23 +33,28 @@ class PowerControlExtension extends Extension {
               },
             ],
           },
+          {
+            label: "Device IP Address",
+            ref: "device",
+            type: INPUT_METHOD.INPUT_TEXT,
+          },
         ],
       },
     ];
   }
 
-  execute(action, { powerAction }) {
+  execute(action, { powerAction, device }) {
     switch (action) {
       case "light-control": {
         switch (powerAction) {
           case "turn-on":
-            lights.setTurnedOn(true);
+            lightController.setTurnedOn(device, true);
             break;
           case "turn-off":
-            lights.setTurnedOn(false);
+            lightController.setTurnedOn(device, false);
             break;
           case "toggle":
-            lights.toggle();
+            lightController.toggle(device);
             break;
           default:
             break;
